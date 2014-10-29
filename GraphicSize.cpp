@@ -68,16 +68,16 @@ bool getImageSize(const char *fn, int *x,int *y)
   // GIF: first three bytes say "GIF", next three give version number. Then dimensions
     if (buf[0]=='G' && buf[1]=='I' && buf[2]=='F')
     { 
-        *x = buf[6] + (buf[7]<<8);
-        *y = buf[8] + (buf[9]<<8);
+        *x = (buf[7]<<8) + (buf[6] & 0xff);
+        *y = (buf[9]<<8) + (buf[8] & 0xff);
         return true;
     }
 
   // PNG: the first frame is by definition an IHDR frame, which gives dimensions
     if ( buf[0]==(char)0x89 && buf[1]=='P' && buf[2]=='N' && buf[3]=='G' && buf[4]==(char)0x0D && buf[5]==(char)0x0A && buf[6]==(char)0x1A && buf[7]==(char)0x0A && buf[12]=='I' && buf[13]=='H' && buf[14]=='D' && buf[15]=='R')
     {
-        *x = (buf[16]<<24) + (buf[17]<<16) + (buf[18]<<8) + (buf[19]<<0);
-        *y = (buf[20]<<24) + (buf[21]<<16) + (buf[22]<<8) + (buf[23]<<0);
+        *x = (buf[16]<<24) + ( (buf[17] & 0xff) <<16) + ( (buf[18] & 0xff) <<8) + ( (buf[19] & 0xff) <<0);
+        *y = (buf[20]<<24) + ( (buf[21] & 0xff) <<16) + ( (buf[22] & 0xff) <<8) + ( (buf[23] & 0xff) <<0);
 
         return true;
     }
